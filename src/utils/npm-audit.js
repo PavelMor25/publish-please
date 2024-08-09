@@ -12,7 +12,7 @@ const path = require('path');
 /**
  * Missing package-lock.json
  */
-const EAUDITNOLOCK = 'EAUDITNOLOCK';
+const EAUDITNOLOCK = 'ENOLOCK';
 
 /**
  * Audit the project in directory projectDir
@@ -175,47 +175,13 @@ function removeIgnoredVulnerabilities(response, options) {
         const filteredResponse = JSON.parse(JSON.stringify(response, null, 2));
 
         /* prettier-ignore */
-        filteredResponse.actions = filteredResponse.actions
-            ? filteredResponse.actions
-                .map((action) => {
-                    action.resolves = action.resolves.filter(
-                        (resolve) =>
-                            ignoredVulnerabilities.indexOf(`${resolve.id}`) < 0
-                    );
-                    return action;
-                })
-                .filter((action) => action.resolves.length > 0)
-            : [];
+        const vulnerabilities = filteredResponse.vulnerabilities
+            ? filterIgnoredVulnerabilities(filteredResponse.vulnerabilities, ignoredVulnerabilities)
+            : {};
 
-        ignoredVulnerabilities.forEach(
-            (ignoredVulnerability) =>
-                delete filteredResponse.advisories[ignoredVulnerability]
-        );
-
-        const vulnerabilitiesMetadata = {
-            info: 0,
-            low: 0,
-            moderate: 0,
-            high: 0,
-            critical: 0,
-        };
-
-        const severities = {};
-        const advisories = filteredResponse.advisories;
-        for (const key in advisories) {
-            if (advisories.hasOwnProperty(key)) {
-                const advisory = advisories[key];
-                severities[`${advisory.id}`] = advisory.severity;
-            }
-        }
-
-        filteredResponse.actions.forEach((action) => {
-            action.resolves.forEach((resolve) => {
-                vulnerabilitiesMetadata[severities[`${resolve.id}`]] += 1;
-            });
+        vulnerabilities.forEach((vulnerability) => {
+            delete filteredResponse.vulnerabilities[vulnerability.name];
         });
-
-        filteredResponse.metadata.vulnerabilities = vulnerabilitiesMetadata;
 
         return filteredResponse;
     } catch (error) {
@@ -226,6 +192,24 @@ function removeIgnoredVulnerabilities(response, options) {
         }
         return response;
     }
+}
+
+function filterIgnoredVulnerabilities(vulnerabilities, ignoredVulnerabilities) {
+    const isIgnoredVulnerability = ({ url }) => {
+        return !ignoredVulnerabilities
+            .some(ignoredVulnerability => {
+                return url ? url.indexOf(ignoredVulnerability) > 0 : false;
+            });
+    }
+
+    return Object.keys(vulnerabilities)
+        .map((vulnerability) => {
+            vulnerabilities[vulnerability].via = vulnerabilities[vulnerability].via
+                .filter(isIgnoredVulnerability);
+
+            return vulnerabilities[vulnerability];
+        })
+        .filter(vulnerability => vulnerability.via.length === 0);
 }
 
 /**
@@ -458,62 +442,15 @@ function removeIgnoredLevels(response, options) {
         }
 
         const filteredResponse = JSON.parse(JSON.stringify(response, null, 2));
-        const ignoredVulnerabilities = [];
-
-        const advisories = filteredResponse.advisories || {};
-        for (const key in advisories) {
-            const advisory = advisories[key];
-            if (
-                advisory &&
-                advisory.severity &&
-                advisory.id &&
-                filteredLevels.indexOf(advisory.severity) < 0
-            ) {
-                ignoredVulnerabilities.push(advisory.id);
-            }
-        }
-
-        ignoredVulnerabilities.forEach((ignoredVulnerabilityId) => {
-            delete filteredResponse.advisories[`${ignoredVulnerabilityId}`];
-        });
-
-        const severities = {};
-        for (const key in advisories) {
-            const advisory = advisories[key];
-            if (advisory && advisory.severity && advisory.id) {
-                severities[`${advisory.id}`] = advisory.severity;
-            }
-        }
-
         /* prettier-ignore */
-        filteredResponse.actions = filteredResponse.actions
-            ? filteredResponse.actions
-                .map((action) => {
-                    action.resolves = action.resolves.filter(
-                        (resolve) => ignoredVulnerabilities.indexOf(resolve.id) < 0
-                    );
-                    return action;
-                })
-                .filter((action) => action.resolves.length > 0)
+        const vulnerabilities = filteredResponse.vulnerabilities
+            ? filterIgnoredLevels(filteredResponse.vulnerabilities, filteredLevels)
             : [];
 
-        const vulnerabilitiesMetadata = {
-            info: 0,
-            low: 0,
-            moderate: 0,
-            high: 0,
-            critical: 0,
-        };
-
-        filteredResponse.actions.forEach((action) => {
-            action.resolves.forEach((resolve) => {
-                if (resolve && resolve.id) {
-                    vulnerabilitiesMetadata[severities[`${resolve.id}`]] += 1;
-                }
-            });
+        vulnerabilities.forEach((vulnerability) => {
+            delete filteredResponse.vulnerabilities[vulnerability];
         });
 
-        filteredResponse.metadata.vulnerabilities = vulnerabilitiesMetadata;
         return filteredResponse;
     } catch (error) {
         if (response) {
@@ -523,6 +460,14 @@ function removeIgnoredLevels(response, options) {
         }
         return response;
     }
+}
+
+function filterIgnoredLevels(vulnerabilities, filteredLevels) {
+    return Object.keys(vulnerabilities).filter(
+        (vulnerability) => {
+            return filteredLevels.indexOf(vulnerabilities[vulnerability].severity) < 0;
+        }
+    );
 }
 
 /**

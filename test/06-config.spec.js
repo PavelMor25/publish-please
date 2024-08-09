@@ -5,7 +5,7 @@ const should = require('should');
 const stdinMock = require('mock-stdin');
 const simulateUserInput = require('./utils/simulate-user-input');
 const pathJoin = require('path').join;
-const mkdirp = require('mkdirp');
+const { mkdirp } = require('mkdirp');
 const config = require('../lib/config');
 const lineSeparator = '----------------------------------';
 

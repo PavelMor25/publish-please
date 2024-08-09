@@ -3,7 +3,7 @@
 /* eslint-disable no-unused-vars */
 const should = require('should');
 const pathJoin = require('path').join;
-const mkdirp = require('mkdirp');
+const { mkdirp } = require('mkdirp');
 const del = require('del');
 const writeFile = require('fs').writeFileSync;
 const EOL = require('os').EOL;

@@ -1,4 +1,4 @@
-name: Publish
+name: Publishing
 
 on:
   release:
@@ -10,6 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     environment: release
     steps:
-      - uses: DevExpress/testcafe-build-system/actions/publish-with-publish-please@main
+      - uses: actions/checkout@v3
         with:
-          token: ${{ secrets.NPM_TOKEN }}
+          ref: ${{ github.event.release.target_commitish }}
+      - run: git fetch --force --tags
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm install
+      - run: npm run publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

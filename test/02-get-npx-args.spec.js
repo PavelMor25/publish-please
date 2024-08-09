@@ -9,7 +9,6 @@ const lineSeparator = '----------------------------------';
 describe('npx args parser util', () => {
     let originalArgv;
     before(() => {
-        process.env['npm_config_argv'] = undefined;
         originalArgv = process.argv.map((arg) => arg);
     });
     after(() => {

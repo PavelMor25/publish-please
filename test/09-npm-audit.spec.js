@@ -3,7 +3,7 @@
 /* eslint-disable no-unused-vars */
 const should = require('should');
 const pathJoin = require('path').join;
-const mkdirp = require('mkdirp');
+const { mkdirp } = require('mkdirp');
 const del = require('del');
 const writeFile = require('fs').writeFileSync;
 const EOL = require('os').EOL;
@@ -1179,81 +1179,15 @@ describe('npm audit analyzer', () => {
             ),
         };
         const response = {
-            actions: [
-                {
-                    action: 'install',
-                    module: 'ms',
-                    target: '2.1.1',
-                    isMajor: true,
-                    resolves: [
-                        {
-                            id: 46,
-                            path: 'ms',
-                            dev: false,
-                            optional: false,
-                            bundled: false,
-                        },
-                    ],
-                },
-                {
-                    action: 'update',
-                    module: 'lodash',
-                    depth: 3,
-                    target: '4.17.11',
-                    resolves: [
-                        {
-                            id: 577,
-                            path: 'nsp>inquirer>lodash',
-                            dev: false,
-                            optional: false,
-                            bundled: false,
-                        },
-                    ],
-                },
-                {
-                    action: 'review',
-                    module: 'lodash',
-                    resolves: [
-                        {
-                            id: 577,
-                            path: 'ban-sensitive-files>ggit>lodash',
-                            dev: false,
-                            optional: false,
-                            bundled: false,
-                        },
-                        {
-                            id: 577,
-                            path: 'nsp>cli-table2>lodash',
-                            dev: false,
-                            optional: false,
-                            bundled: false,
-                        },
-                    ],
-                },
-            ],
-            advisories: {
-                '46': {
-                    id: 46,
+            vulnerabilities: {
+                moderate: {
+                    name: 'moderate',
                     severity: 'moderate',
                 },
-                '577': {
-                    id: 577,
+                low: {
+                    name: 'low',
                     severity: 'low',
                 },
-            },
-            muted: [],
-            metadata: {
-                vulnerabilities: {
-                    info: 0,
-                    low: 1,
-                    moderate: 1,
-                    high: 0,
-                    critical: 0,
-                },
-                dependencies: 1,
-                devDependencies: 2,
-                optionalDependencies: 3,
-                totalDependencies: 4,
             },
         };
 
@@ -1262,42 +1196,11 @@ describe('npm audit analyzer', () => {
 
         // Then
         const expected = {
-            actions: [
-                {
-                    action: 'install',
-                    module: 'ms',
-                    target: '2.1.1',
-                    isMajor: true,
-                    resolves: [
-                        {
-                            id: 46,
-                            path: 'ms',
-                            dev: false,
-                            optional: false,
-                            bundled: false,
-                        },
-                    ],
-                },
-            ],
-            advisories: {
-                '46': {
-                    id: 46,
+            vulnerabilities: {
+                moderate: {
+                    name: 'moderate',
                     severity: 'moderate',
                 },
-            },
-            muted: [],
-            metadata: {
-                vulnerabilities: {
-                    info: 0,
-                    low: 0,
-                    moderate: 1,
-                    high: 0,
-                    critical: 0,
-                },
-                dependencies: 1,
-                devDependencies: 2,
-                optionalDependencies: 3,
-                totalDependencies: 4,
             },
         };
         result.should.eql(expected);
@@ -1320,81 +1223,15 @@ describe('npm audit analyzer', () => {
             ),
         };
         const response = {
-            actions: [
-                {
-                    action: 'install',
-                    module: 'ms',
-                    target: '2.1.1',
-                    isMajor: true,
-                    resolves: [
-                        {
-                            id: 46,
-                            path: 'ms',
-                            dev: false,
-                            optional: false,
-                            bundled: false,
-                        },
-                    ],
-                },
-                {
-                    action: 'update',
-                    module: 'lodash',
-                    depth: 3,
-                    target: '4.17.11',
-                    resolves: [
-                        {
-                            id: 577,
-                            path: 'nsp>inquirer>lodash',
-                            dev: false,
-                            optional: false,
-                            bundled: false,
-                        },
-                    ],
-                },
-                {
-                    action: 'review',
-                    module: 'lodash',
-                    resolves: [
-                        {
-                            id: 577,
-                            path: 'ban-sensitive-files>ggit>lodash',
-                            dev: false,
-                            optional: false,
-                            bundled: false,
-                        },
-                        {
-                            id: 577,
-                            path: 'nsp>cli-table2>lodash',
-                            dev: false,
-                            optional: false,
-                            bundled: false,
-                        },
-                    ],
-                },
-            ],
-            advisories: {
-                '46': {
-                    id: 46,
+            vulnerabilities: {
+                moderate: {
+                    name: 'moderate',
                     severity: 'moderate',
                 },
-                '577': {
-                    id: 577,
+                low: {
+                    name: 'low',
                     severity: 'low',
                 },
-            },
-            muted: [],
-            metadata: {
-                vulnerabilities: {
-                    info: 0,
-                    low: 1,
-                    moderate: 1,
-                    high: 0,
-                    critical: 0,
-                },
-                dependencies: 1,
-                devDependencies: 2,
-                optionalDependencies: 3,
-                totalDependencies: 4,
             },
         };
 
@@ -1403,22 +1240,7 @@ describe('npm audit analyzer', () => {
 
         // Then
         const expected = {
-            actions: [],
-            advisories: {},
-            muted: [],
-            metadata: {
-                vulnerabilities: {
-                    info: 0,
-                    low: 0,
-                    moderate: 0,
-                    high: 0,
-                    critical: 0,
-                },
-                dependencies: 1,
-                devDependencies: 2,
-                optionalDependencies: 3,
-                totalDependencies: 4,
-            },
+            vulnerabilities: {},
         };
         result.should.eql(expected);
     });
@@ -1440,100 +1262,19 @@ describe('npm audit analyzer', () => {
             ),
         };
         const response = {
-            actions: [
-                {
-                    action: 'install',
-                    module: 'yo123',
-                    target: '2.1.1',
-                    isMajor: true,
-                    resolves: [
-                        {
-                            id: 123,
-                            path: 'ms',
-                            dev: false,
-                            optional: false,
-                            bundled: false,
-                        },
-                    ],
-                },
-                {
-                    action: 'install',
-                    module: 'ms',
-                    target: '2.1.1',
-                    isMajor: true,
-                    resolves: [
-                        {
-                            id: 46,
-                            path: 'ms',
-                            dev: false,
-                            optional: false,
-                            bundled: false,
-                        },
-                    ],
-                },
-                {
-                    action: 'update',
-                    module: 'lodash',
-                    depth: 3,
-                    target: '4.17.11',
-                    resolves: [
-                        {
-                            id: 577,
-                            path: 'nsp>inquirer>lodash',
-                            dev: false,
-                            optional: false,
-                            bundled: false,
-                        },
-                    ],
-                },
-                {
-                    action: 'review',
-                    module: 'lodash',
-                    resolves: [
-                        {
-                            id: 577,
-                            path: 'ban-sensitive-files>ggit>lodash',
-                            dev: false,
-                            optional: false,
-                            bundled: false,
-                        },
-                        {
-                            id: 577,
-                            path: 'nsp>cli-table2>lodash',
-                            dev: false,
-                            optional: false,
-                            bundled: false,
-                        },
-                    ],
-                },
-            ],
-            advisories: {
-                '46': {
-                    id: 46,
-                    severity: 'moderate',
-                },
-                '577': {
-                    id: 577,
-                    severity: 'low',
-                },
-                '123': {
-                    id: 123,
+            vulnerabilities: {
+                high: {
+                    name: 'high',
                     severity: 'high',
                 },
-            },
-            muted: [],
-            metadata: {
-                vulnerabilities: {
-                    info: 0,
-                    low: 1,
-                    moderate: 1,
-                    high: 1,
-                    critical: 0,
+                moderate: {
+                    name: 'moderate',
+                    severity: 'moderate',
                 },
-                dependencies: 1,
-                devDependencies: 2,
-                optionalDependencies: 3,
-                totalDependencies: 4,
+                low: {
+                    name: 'low',
+                    severity: 'low',
+                },
             },
         };
 
@@ -1542,22 +1283,7 @@ describe('npm audit analyzer', () => {
 
         // Then
         const expected = {
-            actions: [],
-            advisories: {},
-            muted: [],
-            metadata: {
-                vulnerabilities: {
-                    info: 0,
-                    low: 0,
-                    moderate: 0,
-                    high: 0,
-                    critical: 0,
-                },
-                dependencies: 1,
-                devDependencies: 2,
-                optionalDependencies: 3,
-                totalDependencies: 4,
-            },
+            vulnerabilities: {},
         };
         result.should.eql(expected);
     });
@@ -1579,119 +1305,23 @@ describe('npm audit analyzer', () => {
             ),
         };
         const response = {
-            actions: [
-                {
-                    action: 'install',
-                    module: 'yo777',
-                    target: '2.1.1',
-                    isMajor: true,
-                    resolves: [
-                        {
-                            id: 777,
-                            path: 'ms',
-                            dev: false,
-                            optional: false,
-                            bundled: false,
-                        },
-                    ],
-                },
-                {
-                    action: 'install',
-                    module: 'yo123',
-                    target: '2.1.1',
-                    isMajor: true,
-                    resolves: [
-                        {
-                            id: 123,
-                            path: 'ms',
-                            dev: false,
-                            optional: false,
-                            bundled: false,
-                        },
-                    ],
-                },
-                {
-                    action: 'install',
-                    module: 'ms',
-                    target: '2.1.1',
-                    isMajor: true,
-                    resolves: [
-                        {
-                            id: 46,
-                            path: 'ms',
-                            dev: false,
-                            optional: false,
-                            bundled: false,
-                        },
-                    ],
-                },
-                {
-                    action: 'update',
-                    module: 'lodash',
-                    depth: 3,
-                    target: '4.17.11',
-                    resolves: [
-                        {
-                            id: 577,
-                            path: 'nsp>inquirer>lodash',
-                            dev: false,
-                            optional: false,
-                            bundled: false,
-                        },
-                    ],
-                },
-                {
-                    action: 'review',
-                    module: 'lodash',
-                    resolves: [
-                        {
-                            id: 577,
-                            path: 'ban-sensitive-files>ggit>lodash',
-                            dev: false,
-                            optional: false,
-                            bundled: false,
-                        },
-                        {
-                            id: 577,
-                            path: 'nsp>cli-table2>lodash',
-                            dev: false,
-                            optional: false,
-                            bundled: false,
-                        },
-                    ],
-                },
-            ],
-            advisories: {
-                '46': {
-                    id: 46,
-                    severity: 'moderate',
-                },
-                '577': {
-                    id: 577,
-                    severity: 'low',
-                },
-                '123': {
-                    id: 123,
-                    severity: 'high',
-                },
-                '777': {
-                    id: 777,
+            vulnerabilities: {
+                critical: {
+                    name: 'critical',
                     severity: 'critical',
                 },
-            },
-            muted: [],
-            metadata: {
-                vulnerabilities: {
-                    info: 0,
-                    low: 1,
-                    moderate: 1,
-                    high: 1,
-                    critical: 0,
+                high: {
+                    name: 'high',
+                    severity: 'high',
                 },
-                dependencies: 1,
-                devDependencies: 2,
-                optionalDependencies: 3,
-                totalDependencies: 4,
+                moderate: {
+                    name: 'moderate',
+                    severity: 'moderate',
+                },
+                low: {
+                    name: 'low',
+                    severity: 'low',
+                },
             },
         };
 
@@ -1700,42 +1330,11 @@ describe('npm audit analyzer', () => {
 
         // Then
         const expected = {
-            actions: [
-                {
-                    action: 'install',
-                    module: 'yo777',
-                    target: '2.1.1',
-                    isMajor: true,
-                    resolves: [
-                        {
-                            id: 777,
-                            path: 'ms',
-                            dev: false,
-                            optional: false,
-                            bundled: false,
-                        },
-                    ],
-                },
-            ],
-            advisories: {
-                '777': {
-                    id: 777,
+            vulnerabilities: {
+                critical: {
+                    name: 'critical',
                     severity: 'critical',
                 },
-            },
-            muted: [],
-            metadata: {
-                vulnerabilities: {
-                    info: 0,
-                    low: 0,
-                    moderate: 0,
-                    high: 0,
-                    critical: 1,
-                },
-                dependencies: 1,
-                devDependencies: 2,
-                optionalDependencies: 3,
-                totalDependencies: 4,
             },
         };
         result.should.eql(expected);
@@ -1758,119 +1357,23 @@ describe('npm audit analyzer', () => {
             ),
         };
         const response = {
-            actions: [
-                {
-                    action: 'install',
-                    module: 'yo777',
-                    target: '2.1.1',
-                    isMajor: true,
-                    resolves: [
-                        {
-                            id: 777,
-                            path: 'ms',
-                            dev: false,
-                            optional: false,
-                            bundled: false,
-                        },
-                    ],
-                },
-                {
-                    action: 'install',
-                    module: 'yo123',
-                    target: '2.1.1',
-                    isMajor: true,
-                    resolves: [
-                        {
-                            id: 123,
-                            path: 'ms',
-                            dev: false,
-                            optional: false,
-                            bundled: false,
-                        },
-                    ],
-                },
-                {
-                    action: 'install',
-                    module: 'ms',
-                    target: '2.1.1',
-                    isMajor: true,
-                    resolves: [
-                        {
-                            id: 46,
-                            path: 'ms',
-                            dev: false,
-                            optional: false,
-                            bundled: false,
-                        },
-                    ],
-                },
-                {
-                    action: 'update',
-                    module: 'lodash',
-                    depth: 3,
-                    target: '4.17.11',
-                    resolves: [
-                        {
-                            id: 577,
-                            path: 'nsp>inquirer>lodash',
-                            dev: false,
-                            optional: false,
-                            bundled: false,
-                        },
-                    ],
-                },
-                {
-                    action: 'review',
-                    module: 'lodash',
-                    resolves: [
-                        {
-                            id: 577,
-                            path: 'ban-sensitive-files>ggit>lodash',
-                            dev: false,
-                            optional: false,
-                            bundled: false,
-                        },
-                        {
-                            id: 577,
-                            path: 'nsp>cli-table2>lodash',
-                            dev: false,
-                            optional: false,
-                            bundled: false,
-                        },
-                    ],
-                },
-            ],
-            advisories: {
-                '46': {
-                    id: 46,
-                    severity: 'moderate',
-                },
-                '577': {
-                    id: 577,
-                    severity: 'low',
-                },
-                '123': {
-                    id: 123,
-                    severity: 'high',
-                },
-                '777': {
-                    id: 777,
+            vulnerabilities: {
+                critical: {
+                    name: 'critical',
                     severity: 'critical',
                 },
-            },
-            muted: [],
-            metadata: {
-                vulnerabilities: {
-                    info: 0,
-                    low: 1,
-                    moderate: 1,
-                    high: 1,
-                    critical: 0,
+                high: {
+                    name: 'high',
+                    severity: 'high',
                 },
-                dependencies: 1,
-                devDependencies: 2,
-                optionalDependencies: 3,
-                totalDependencies: 4,
+                moderate: {
+                    name: 'moderate',
+                    severity: 'moderate',
+                },
+                low: {
+                    name: 'low',
+                    severity: 'low',
+                },
             },
         };
 
@@ -1879,61 +1382,15 @@ describe('npm audit analyzer', () => {
 
         // Then
         const expected = {
-            actions: [
-                {
-                    action: 'install',
-                    module: 'yo777',
-                    target: '2.1.1',
-                    isMajor: true,
-                    resolves: [
-                        {
-                            id: 777,
-                            path: 'ms',
-                            dev: false,
-                            optional: false,
-                            bundled: false,
-                        },
-                    ],
-                },
-                {
-                    action: 'install',
-                    module: 'yo123',
-                    target: '2.1.1',
-                    isMajor: true,
-                    resolves: [
-                        {
-                            id: 123,
-                            path: 'ms',
-                            dev: false,
-                            optional: false,
-                            bundled: false,
-                        },
-                    ],
-                },
-            ],
-            advisories: {
-                '123': {
-                    id: 123,
-                    severity: 'high',
-                },
-                '777': {
-                    id: 777,
+            vulnerabilities: {
+                critical: {
+                    name: 'critical',
                     severity: 'critical',
                 },
-            },
-            muted: [],
-            metadata: {
-                vulnerabilities: {
-                    info: 0,
-                    low: 0,
-                    moderate: 0,
-                    high: 1,
-                    critical: 1,
+                high: {
+                    name: 'high',
+                    severity: 'high',
                 },
-                dependencies: 1,
-                devDependencies: 2,
-                optionalDependencies: 3,
-                totalDependencies: 4,
             },
         };
         result.should.eql(expected);

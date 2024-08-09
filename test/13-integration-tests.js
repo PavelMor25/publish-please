@@ -13,10 +13,9 @@ const defaults = require('lodash/defaultsDeep');
 const unset = require('lodash/unset');
 const exec = require('cp-sugar').exec;
 const readPkg = require('../lib/utils/read-package-json').readPkgSync;
-const mkdirp = require('mkdirp');
+const { mkdirp } = require('mkdirp');
 const chalk = require('chalk');
 const requireUncached = require('import-fresh');
-const packageName = require('./utils/publish-please-version-under-test');
 const nodeInfos = require('../lib/utils/get-node-infos').getNodeInfosSync();
 const shouldUsePrePublishOnlyScript = nodeInfos.shouldUsePrePublishOnlyScript;
 const envType = require('../lib/reporters/env-type');
@@ -38,12 +37,6 @@ describe('Integration tests', () => {
     const publish = requireUncached('../lib/publish/publish-workflow');
     const getOptions = require('../lib/publish-options').getOptions;
     const echoPublishCommand = 'echo "npm publish"';
-
-    function mkdir(path) {
-        return new Promise((resolve, reject) =>
-            mkdirp(path, null, (err) => (err ? reject(err) : resolve()))
-        );
-    }
 
     function getTestOptions(settings) {
         const disabled = {
@@ -94,7 +87,7 @@ describe('Integration tests', () => {
                 )
             )
             .then(() => process.chdir('testing-repo'))
-            .then(() => (process.env.PUBLISH_PLEASE_TEST_MODE = true));
+            .then(() => (process.env.PUBLISH_PLEASE_TEST_MODE = 'true'));
     });
 
     after(() => delete process.env.PUBLISH_PLEASE_TEST_MODE);
@@ -589,7 +582,7 @@ describe('Integration tests', () => {
     describe('Sensitive information audit', () => {
         it('Should fail if finds sensitive information', () =>
             exec('git checkout master')
-                .then(() => mkdir('test'))
+                .then(() => mkdirp('test'))
                 .then(() => {
                     writeFile('lib/pack1.tgz', 'test');
                     writeFile('lib/pack2.tgz', 'test');
@@ -626,7 +619,7 @@ describe('Integration tests', () => {
         if (nodeInfos.npmPackHasJsonReporter) {
             it('Should not perform check for files specified in opts.ignore', () =>
                 exec('git checkout master')
-                    .then(() => mkdir('test'))
+                    .then(() => mkdirp('test'))
                     .then(() => {
                         writeFile('lib/schema.rb', 'test');
                         writeFile('lib/1.keychain', 'test');
@@ -652,7 +645,7 @@ describe('Integration tests', () => {
         }
         it('Should not perform check if sensitiveData-validation is disabled', () =>
             exec('git checkout master')
-                .then(() => mkdir('test'))
+                .then(() => mkdirp('test'))
                 .then(() => {
                     writeFile('schema.rb', 'test');
                     writeFile('test/database.yml', 'test');
@@ -702,7 +695,7 @@ describe('Integration tests', () => {
                             ? assert(err.message.indexOf('Vulnerability found') > -1)
                             : assert(err.message.indexOf('Cannot check vulnerable dependencies') > -1)
                 ));
-        ['publish-please@2.4.1', 'testcafe@0.19.2'].forEach(function(
+        ['lodash@4.16.4', 'testcafe@0.19.2'].forEach(function(
             dependency
         ) {
             const name = dependency.split('@')[0];
@@ -733,7 +726,7 @@ describe('Integration tests', () => {
                         (err) =>
                             /* prettier-ignore */
                             nodeInfos.npmAuditHasJsonReporter
-                                ? assert(err.message.indexOf(`Vulnerability found in ${name}`) > -1)
+                                ? assert(err.message.indexOf(name) > -1)
                                 : assert(err.message.indexOf('Cannot check vulnerable dependencies') > -1)
                     ));
         });
@@ -839,15 +832,14 @@ describe('Integration tests', () => {
                     .then(() => readPkg())
                     .then((pkg) => {
                         pkg.dependencies = {};
-                        pkg.dependencies['lodash'] = '4.16.4';
+                        pkg.dependencies['lodash'] = '4.17.13 ';
                         writeFile('package.json', JSON.stringify(pkg));
                         writeFile(
                             '.auditignore',
                             [
-                                'https://npmjs.com/advisories/577',
-                                'https://npmjs.com/advisories/782',
-                                'https://npmjs.com/advisories/1065',
-                                'https://npmjs.com/advisories/1523',
+                                'https://github.com/advisories/GHSA-35jh-r3h4-6jhm',
+                                'https://github.com/advisories/GHSA-p6mc-m468-83gw',
+                                'https://github.com/advisories/GHSA-29mw-wpgm-hmr9',
                             ].join(EOL)
                         );
                     })
@@ -864,7 +856,7 @@ describe('Integration tests', () => {
                         )
                     ));
 
-            ['lodash@4.17.20', 'ms@0.7.1'].forEach(function(dependency) {
+            ['lodash@4.17.21', 'ms@2.1.3'].forEach(function(dependency) {
                 const name = dependency.split('@')[0];
                 const version = dependency.split('@')[1];
                 it(`Should not fail on ${dependency} as a direct dependency`, () =>
@@ -894,7 +886,7 @@ describe('Integration tests', () => {
                     .then(() => readPkg())
                     .then((pkg) => {
                         pkg.dependencies = {
-                            ms: '0.7.1',
+                            lodash: '4.17.21',
                         };
                         writeFile('package.json', JSON.stringify(pkg));
                     })
@@ -1158,6 +1150,8 @@ describe('Integration tests', () => {
         beforeEach(() => {
             const pkg = JSON.parse(readFile('package.json').toString());
 
+            console.log(prepublishKey);
+
             pkg.scripts = {};
             pkg.scripts[prepublishKey] = 'node ../bin/publish-please.js guard';
             writeFile('package.json', JSON.stringify(pkg));
@@ -1197,7 +1191,7 @@ describe('Integration tests', () => {
 
     describe('Init', () => {
         beforeEach(() => {
-            return mkdir(
+            return mkdirp(
                 'node_modules/publish-please/lib'.replace(/\\|\//g, sep)
             )
                 .then(() =>

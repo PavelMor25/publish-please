@@ -7,14 +7,15 @@ const envType = require('../lib/reporters/env-type');
 const lineSeparator = '----------------------------------';
 
 describe('Guard Execution', () => {
+    let originalEnv;
     let nativeExit;
     let nativeConsoleLog;
     let exitCode;
     let output;
 
     beforeEach(() => {
+        originalEnv = Object.assign({}, process.env);
         console.log(`${lineSeparator} begin test ${lineSeparator}`);
-        delete process.env['npm_config_argv'];
         process.argv = [];
         exitCode = undefined;
         output = '';
@@ -33,12 +34,12 @@ describe('Guard Execution', () => {
         process.exit = nativeExit;
         console.log = nativeConsoleLog;
         console.log(`${lineSeparator} end test ${lineSeparator}\n`);
+        process.env = Object.assign({}, originalEnv);
     });
 
     it('Should return an error message (elegant status reporter) on `npm publish`', () => {
         // Given
-        process.env['npm_config_argv'] =
-            '{"remain":[],"cooked":["publish"],"original":["publish"]}';
+        process.env['npm_command'] = 'publish';
         // When
         guard(process.env);
         // Then
@@ -54,8 +55,8 @@ describe('Guard Execution', () => {
 
     it('Should return an error message (CI reporter) on `npm publish --ci`', () => {
         // Given
-        process.env['npm_config_argv'] =
-            '{"remain":[],"cooked":["publish", "--ci"],"original":["publish", "--ci"]}';
+        process.env['npm_command'] = 'publish';
+        process.env['npm_config_ci'] = 'true';
         // When
         guard(process.env);
         // Then
@@ -70,8 +71,8 @@ describe('Guard Execution', () => {
 
     it('Should not return an error message on `npm publish --with-publish-please`', () => {
         // Given
-        process.env['npm_config_argv'] =
-            '{"remain":[],"cooked":["publish","--with-publish-please"],"original":["publish","--with-publish-please"]}';
+        process.env['npm_command'] = 'publish';
+        process.env['npm_config_with_publish_please'] = 'true';
         // When
         guard(process.env);
         // Then

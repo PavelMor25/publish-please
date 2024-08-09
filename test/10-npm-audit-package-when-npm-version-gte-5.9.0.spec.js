@@ -2,7 +2,7 @@
 
 /* eslint-disable no-unused-vars */
 const should = require('should');
-const mkdirp = require('mkdirp');
+const { mkdirp } = require('mkdirp');
 const nodeInfos = require('../lib/utils/get-node-infos').getNodeInfosSync();
 const pathJoin = require('path').join;
 const del = require('del');

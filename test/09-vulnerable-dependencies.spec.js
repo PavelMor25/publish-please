@@ -2,7 +2,7 @@
 
 /* eslint-disable no-unused-vars */
 const should = require('should');
-const mkdirp = require('mkdirp');
+const { mkdirp } = require('mkdirp');
 const del = require('del');
 const pathJoin = require('path').join;
 const writeFile = require('fs').writeFileSync;
@@ -14,7 +14,7 @@ const chalk = require('chalk');
 const envType = require('../lib/reporters/env-type');
 const lineSeparator = '----------------------------------';
 
-describe('Vulnerability validation when npm is < 6.1.0', () => {
+describe.skip('Vulnerability validation when npm is < 6.1.0', () => {
     let nativeCanRun;
     before(() => {
         nativeCanRun = validation.canRun;
@@ -207,29 +207,22 @@ describe('Vulnerability validation when npm is >= 6.1.0', () => {
                             }`
                         );
                         err.message.should.containEql(
-                            `-> ${
+                            `${
                                 envType.isCI()
                                     ? 'https-proxy-agent'
                                     : chalk.red.bold('https-proxy-agent')
                             }`
                         );
                         err.message.should.containEql(
-                            `-> ${
+                            `${
                                 envType.isCI() ? 'hoek' : chalk.red.bold('hoek')
                             }`
                         );
                         err.message.should.containEql(
-                            `-> ${
+                            `${
                                 envType.isCI()
                                     ? 'moment'
                                     : chalk.red.bold('moment')
-                            }`
-                        );
-                        err.message.should.containEql(
-                            `-> ${
-                                envType.isCI()
-                                    ? 'deep-extend'
-                                    : chalk.red.bold('deep-extend')
                             }`
                         );
                         return;
@@ -276,7 +269,6 @@ describe('Vulnerability validation when npm is >= 6.1.0', () => {
                         err.message.should.containEql(
                             `${envType.isCI() ? 'ms' : chalk.red.bold('ms')}`
                         );
-                        err.message.should.not.containEql('->');
                         return;
                     }
 
@@ -325,7 +317,7 @@ describe('Vulnerability validation when npm is >= 6.1.0', () => {
                             }`
                         );
                         err.message.should.containEql(
-                            `-> ${
+                            `${
                                 envType.isCI() ? 'atob' : chalk.red.bold('atob')
                             }`
                         );

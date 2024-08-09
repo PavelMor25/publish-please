@@ -36,11 +36,17 @@ module.exports = {
                     .then((result) => {
                         if (vulnerabilitiesFoundIn(result)) {
                             const errs = new Set();
-                            result.actions.forEach((action) => {
-                                action.resolves.forEach((vulnerability) => {
-                                    errs.add(summaryOf(vulnerability));
-                                });
-                            });
+
+                            Object.keys(result.vulnerabilities).forEach(
+                                (vulnerability) => {
+                                    result.vulnerabilities[vulnerability].nodes
+                                        .forEach((path) => {
+                                            const formattedPath = summaryOf(path.replace(/^node_modules\//g, ''));
+
+                                            errs.add(formattedPath);
+                                        });
+                                }
+                            );
                             const distinctAndSortedErrors = Array.from(
                                 errs
                             ).sort();
@@ -65,7 +71,9 @@ module.exports = {
 };
 
 function vulnerabilitiesFoundIn(result) {
-    return result && Array.isArray(result.actions) && result.actions.length > 0;
+    return result &&
+        result.vulnerabilities &&
+        Object.keys(result.vulnerabilities).length > 0;
 }
 
 function auditErrorFoundIn(result) {
@@ -75,7 +83,7 @@ function auditErrorFoundIn(result) {
 function summaryOf(vulnerability) {
     const summary = `Vulnerability found in ${reporter
         .current()
-        .formatAsElegantPath(vulnerability.path, '>')}`;
+        .formatAsElegantPath(vulnerability, '/')}`;
     return summary;
 }
 

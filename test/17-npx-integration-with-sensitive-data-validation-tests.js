@@ -4,7 +4,7 @@
 const should = require('should');
 const assert = require('assert');
 const del = require('del');
-const mkdirp = require('mkdirp');
+const { mkdirp } = require('mkdirp');
 const writeFile = require('fs').writeFileSync;
 const readFile = require('fs').readFileSync;
 const exec = require('cp-sugar').exec;
@@ -14,6 +14,7 @@ const EOL = require('os').EOL;
 const pathJoin = require('path').join;
 const touch = require('./utils/touch-file-sync');
 const lineSeparator = '----------------------------------';
+const packagePath = `../${packageName.replace('@','-')}.tgz`;
 
 /* eslint-disable max-nested-callbacks */
 describe('npx integration tests with sensitive-data validation', () => {
@@ -50,7 +51,7 @@ describe('npx integration tests with sensitive-data validation', () => {
                 )
                 .then(() => process.chdir('testing-repo'))
                 .then(() => console.log(`tests will run in ${process.cwd()}`))
-                .then(() => (process.env.PUBLISH_PLEASE_TEST_MODE = true));
+                .then(() => (process.env.PUBLISH_PLEASE_TEST_MODE = 'true'));
         }
 
         return del('testing-repo')
@@ -62,7 +63,7 @@ describe('npx integration tests with sensitive-data validation', () => {
             )
             .then(() => process.chdir('testing-repo'))
             .then(() => console.log(`tests will run in ${process.cwd()}`))
-            .then(() => (process.env.PUBLISH_PLEASE_TEST_MODE = true));
+            .then(() => (process.env.PUBLISH_PLEASE_TEST_MODE = 'true'));
     });
 
     after(() => delete process.env.PUBLISH_PLEASE_TEST_MODE);
@@ -138,10 +139,10 @@ describe('npx integration tests with sensitive-data validation', () => {
                 .then(() =>
                     exec(
                         /* prettier-ignore */
-                        `npx ../${packageName.replace('@','-')}.tgz > ./publish11.log`
+                        `npx ${packagePath} > ./publish11.log`
                     )
                 )
-                .then(() => {
+                .catch(() => {
                     const publishLog = readFile('./publish11.log').toString();
                     console.log(publishLog);
                     return publishLog;
@@ -233,10 +234,10 @@ describe('npx integration tests with sensitive-data validation', () => {
                 .then(() =>
                     exec(
                         /* prettier-ignore */
-                        `npx ../${packageName.replace('@','-')}.tgz > ./publish12.log`
+                        `npx ${packagePath} > ./publish12.log`
                     )
                 )
-                .then(() => {
+                .catch(() => {
                     const publishLog = readFile('./publish12.log').toString();
                     console.log(publishLog);
                     return publishLog;
@@ -313,10 +314,10 @@ describe('npx integration tests with sensitive-data validation', () => {
                 .then(() =>
                     exec(
                         /* prettier-ignore */
-                        `npx ../${packageName.replace('@','-')}.tgz > ./publish13.log`
+                        `npx ${packagePath} > ./publish13.log`
                     )
                 )
-                .then(() => {
+                .catch(() => {
                     const publishLog = readFile('./publish13.log').toString();
                     console.log(publishLog);
                     return publishLog;
@@ -395,10 +396,10 @@ describe('npx integration tests with sensitive-data validation', () => {
                 .then(() =>
                     exec(
                         /* prettier-ignore */
-                        `npx ../${packageName.replace('@','-')}.tgz > ./publish14.log`
+                        `npx ${packagePath} > ./publish14.log`
                     )
                 )
-                .then(() => {
+                .catch(() => {
                     const publishLog = readFile('./publish14.log').toString();
                     console.log(publishLog);
                     return publishLog;
@@ -481,7 +482,7 @@ describe('npx integration tests with sensitive-data validation', () => {
                 .then(() =>
                     exec(
                         /* prettier-ignore */
-                        `npx ../${packageName.replace('@','-')}.tgz > ./publish15.log`
+                        `npx ${packagePath} > ./publish15.log`
                     )
                 )
                 .then(() => {

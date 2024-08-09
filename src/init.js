@@ -108,7 +108,7 @@ function onInstall(projectDir) {
             return;
         }
 
-        if (pkg && pkg.name === 'publish-please') {
+        if (pkg && pkg.name === '@devexpress/publish-please') {
             reportNoHooksOnItself();
             process.exit(0);
             return;

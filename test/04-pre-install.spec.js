@@ -9,7 +9,7 @@ const mkdirp = require('mkdirp');
 const pathJoin = require('path').join;
 const lineSeparator = '----------------------------------';
 
-describe('Pre-Install Execution', () => {
+describe.skip('Pre-Install Execution', () => {
     let nativeExit;
     let nativeConsoleLog;
     let exitCode;

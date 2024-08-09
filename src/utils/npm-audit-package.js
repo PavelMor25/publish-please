@@ -126,8 +126,7 @@ function isSensitiveData(filepath, allSensitiveDataPatterns) {
         filepath &&
         allSensitiveDataPatterns &&
         allSensitiveDataPatterns.ignoredData &&
-        globMatching.any(filepath, allSensitiveDataPatterns.ignoredData, {
-            matchBase: true,
+        globMatching.isMatch(filepath, allSensitiveDataPatterns.ignoredData, {
             nocase: true,
         })
     ) {
@@ -138,8 +137,7 @@ function isSensitiveData(filepath, allSensitiveDataPatterns) {
         filepath &&
         allSensitiveDataPatterns &&
         allSensitiveDataPatterns.sensitiveData &&
-        globMatching.any(filepath, allSensitiveDataPatterns.sensitiveData, {
-            matchBase: true,
+        globMatching.isMatch(filepath, allSensitiveDataPatterns.sensitiveData, {
             nocase: true,
         })
     ) {
@@ -174,8 +172,7 @@ function updateSensitiveDataInfosOfIgnoredFilesIn(response, options) {
 function isIgnoredData(filepath, ignoredData) {
     return (
         filepath &&
-        globMatching.any(filepath, ignoredData, {
-            matchBase: true,
+        globMatching.isMatch(filepath, ignoredData, {
             nocase: true,
         })
     );

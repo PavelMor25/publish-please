@@ -15,21 +15,21 @@ benchmarks/**
 # Configuration files
 #-----------------------
 # CI
-.travis.yml
-appveyor.yml
+**/.travis.yml
 **/appveyor.yml
 
 # eslint
-.eslintrc
-.eslintrc.json
-.eslintrc.yaml
-.eslintrc.yml
+**/.eslintrc
+**/.eslintrc.json
+**/.eslintrc.yaml
+**/.eslintrc.yml
 
 # GitHub
 .github/**
 
 # JetBrains
 .idea/**/*
+.idea/**/.*
 **/.idea/**/*
 
 # Visual Studio Code
@@ -85,25 +85,25 @@ logs/**
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-*.svclog
+**/*.svclog
 
 # Backup & report files from converting an old project file
 # to a newer Visual Studio version. Backup files are not needed,
-UpgradeLog*.XML
-UpgradeLog*.htm
+**/UpgradeLog*.XML
+**/UpgradeLog*.htm
 
 # MSBuild Binary and Structured Log
-*.binlog
+**/*.binlog
 
 #-----------------------
 # Private SSH keys
 #-----------------------
-*_rsa
-*_rsa.*
-!*_rsa.pub
-*_dsa
-*_dsa.*
-!*_dsa.pub
+**/*_rsa
+**/*_rsa.*
+!**/*_rsa.pub
+**/*_dsa
+**/*_dsa.*
+!**/*_dsa.pub
 
 #-----------------------
 # Script Files
@@ -114,7 +114,7 @@ scripts/**
 #-----------------------
 # Secret files
 #-----------------------
-*.key
+**/*.key
 
 #-----------------------
 # src Files
@@ -137,11 +137,11 @@ tests/**
 **/tests/**
 test/**
 **/test/**
-*.spec.js
-*.spec.ts
+**/*.spec.js
+**/*.spec.ts
 
 #-----------------------
 # zip files
 #-----------------------
 # Output of 'npm pack'
-*.tgz
+**/*.tgz

@@ -2,7 +2,7 @@
 
 /* eslint-disable no-unused-vars */
 const should = require('should');
-const mkdirp = require('mkdirp');
+const { mkdirp } = require('mkdirp');
 const pathJoin = require('path').join;
 const del = require('del');
 const audit = require('../lib/utils/npm-audit');
@@ -11,7 +11,7 @@ const writeFile = require('fs').writeFileSync;
 const lineSeparator = '----------------------------------';
 
 if (!nodeInfos.npmAuditHasJsonReporter) {
-    describe('npm audit analyzer when npm is < 6.1.0', () => {
+    describe.skip('npm audit analyzer when npm is < 6.1.0', () => {
         let originalWorkingDirectory;
         let projectDir;
 

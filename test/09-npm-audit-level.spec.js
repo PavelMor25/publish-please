@@ -2,7 +2,7 @@
 
 /* eslint-disable no-unused-vars */
 const should = require('should');
-const mkdirp = require('mkdirp');
+const { mkdirp } = require('mkdirp');
 const pathJoin = require('path').join;
 const del = require('del');
 const audit = require('../lib/utils/npm-audit');
@@ -59,21 +59,23 @@ if (nodeInfos.npmAuditHasJsonReporter) {
                     // Then
                     .then((result) => {
                         const expected = {
-                            actions: [],
-                            advisories: {},
-                            muted: [],
                             metadata: {
                                 vulnerabilities: {
                                     info: 0,
                                     low: 0,
                                     moderate: 0,
-                                    high: 0,
+                                    high: 1,
                                     critical: 0,
+                                    total: 1,
                                 },
-                                dependencies: 1,
-                                devDependencies: 0,
-                                optionalDependencies: 0,
-                                totalDependencies: 1,
+                                dependencies: {
+                                    prod: 2,
+                                    dev: 0,
+                                    optional: 0,
+                                    peer: 0,
+                                    peerOptional: 0,
+                                    total: 1,
+                                },
                             },
                         };
                         result.should.containDeep(expected);

@@ -11,6 +11,7 @@ const icon = require('../lib/reporters/ci-icon');
 const lineSeparator = '----------------------------------';
 
 describe('CI reporter', () => {
+    let originalEnv;
     let nativeExit;
     let nativeConsoleLog;
     let nativeIsCI;
@@ -19,6 +20,7 @@ describe('CI reporter', () => {
     let output;
 
     beforeEach(() => {
+        originalEnv = Object.assign({}, process.env);
         console.log(
             `${lineSeparator} begin test - platform: ${os.platform()} ${lineSeparator}`
         );
@@ -39,6 +41,7 @@ describe('CI reporter', () => {
         };
     });
     afterEach(() => {
+        process.env = Object.assign({}, originalEnv);
         process.exit = nativeExit;
         console.log = nativeConsoleLog;
         envType.isCI = nativeIsCI;
@@ -147,9 +150,8 @@ describe('CI reporter', () => {
 
     it("Should run when publish-please is started with command 'npm run publish-please --ci'", () => {
         // Given
-        process.env['npm_config_argv'] =
-            '{"remain":[],"cooked":["run","publish-please","--ci"],"original":["run","publish-please","--ci"]}';
-
+        process.env['npm_command'] = 'run-script';
+        process.env['npm_config_ci'] = 'true';
         // When
         const result = reporter.shouldRun();
         // Then
