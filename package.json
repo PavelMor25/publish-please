@@ -1,5 +1,5 @@
 {
-  "name": "@devexpress/publish-please",
+  "name": "@testcafe/publish-please",
   "version": "5.6.0",
   "description": "Safe and highly functional replacement for `npm publish`.",
   "main": "./lib/index.js",
