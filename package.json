@@ -21,7 +21,7 @@
     "preinstall": "node lib/pre-install.js",
     "postinstall": "node lib/post-install.js",
     "package": "rimraf package && rimraf publish-please*.tgz && npm pack",
-    "publish": "publish-please"
+    "publish": "npm run build && node ./bin/publish-please.js"
   },
   "repository": {
     "type": "git",
