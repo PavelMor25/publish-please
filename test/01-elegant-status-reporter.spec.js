@@ -106,7 +106,7 @@ describe('Elegant status reporter', () => {
         reporter.reportSuccess(message);
         // Then
         output.should.containEql(message);
-        if (typeof process.env.APPVEYOR === 'undefined') {
+        if (process.env.CI !== 'true') {
             output.should.containEql('\u001b[32m');
         }
     });
@@ -119,7 +119,7 @@ describe('Elegant status reporter', () => {
         reporter.reportError(message);
         // Then
         output.should.containEql(message);
-        if (typeof process.env.APPVEYOR === 'undefined') {
+        if (process.env.CI !== 'true') {
             output.should.containEql('\u001b[31m');
         }
     });
@@ -132,7 +132,7 @@ describe('Elegant status reporter', () => {
         reporter.reportStep(message);
         // Then
         output.should.containEql(message);
-        if (typeof process.env.APPVEYOR === 'undefined') {
+        if (process.env.CI !== 'true') {
             output.should.containEql('\u001b[34m');
         }
     });
@@ -145,7 +145,7 @@ describe('Elegant status reporter', () => {
         reporter.reportInformation(message);
         // Then
         output.should.containEql(message);
-        if (typeof process.env.APPVEYOR === 'undefined') {
+        if (process.env.CI !== 'true') {
             output.should.containEql('\u001b[7m');
         }
     });
@@ -158,7 +158,7 @@ describe('Elegant status reporter', () => {
         reporter.reportAsIs(message);
         // Then
         output.should.containEql(message);
-        if (typeof process.env.APPVEYOR === 'undefined') {
+        if (process.env.CI !== 'true') {
             output.should.not.containEql('\u001b');
             output.should.not.containEql('[');
         }
@@ -172,7 +172,7 @@ describe('Elegant status reporter', () => {
         reporter.reportRunningSequence(message);
         // Then
         output.should.containEql(message);
-        if (typeof process.env.APPVEYOR === 'undefined') {
+        if (process.env.CI !== 'true') {
             output.should.containEql('\u001b[33m');
         }
     });
@@ -185,7 +185,7 @@ describe('Elegant status reporter', () => {
         reporter.reportSucceededSequence(message);
         // Then
         output.should.containEql('-------------------');
-        if (typeof process.env.APPVEYOR === 'undefined') {
+        if (process.env.CI !== 'true') {
             output.should.containEql(emoji['+1']);
         }
     });
@@ -197,7 +197,7 @@ describe('Elegant status reporter', () => {
         // When
         reporter.reportSucceededProcess(message);
         // Then
-        if (typeof process.env.APPVEYOR === 'undefined') {
+        if (process.env.CI !== 'true') {
             output.should.containEql(emoji.tada);
         }
     });
