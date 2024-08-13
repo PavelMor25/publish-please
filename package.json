@@ -16,7 +16,7 @@
     "compile": "babel src -d lib",
     "build": "npm run clean && npm run compile && prettier --write \"lib/{pre,post}-install.js\" && prettier --write \"lib/reporters/*.js\"",
     "mocha-with-coverage": "node node_modules/mocha/bin/_mocha test --timeout=30000",
-    "test": "npm run prettier-format && npm run lint && npm run build && npm run mocha-with-coverage",
+    "test": "npm run prettier-format && npm run build && npm run mocha-with-coverage",
     "test-with-no-coverage-check": "npm run prettier-format && npm run lint && npm run build && npm run mocha-with-coverage",
     "preinstall": "node lib/pre-install.js",
     "postinstall": "node lib/post-install.js",
